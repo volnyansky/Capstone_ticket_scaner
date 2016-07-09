@@ -20,4 +20,9 @@
 	<string name="scan_next">ВЕРНУТЬСЯ К СКАНИРОВАНИЮ</string>
 	<string name="return_to_scan_screen">Вернуться к экрану сканирования</string>
 	<string name="activated_time">Время активации</string>
+	<string name="camera_request_description">Приложению небходим доступ к камере для считывания штрихкодов</string>
+	<string name="grant_access">Дать доступ</string>
+	<string name="cancel">Отмена</string>
+	<string name="camera_access_not_granted">Приложение не может работать без доступа к камере</string>
+	<string name="close_app">Выход</string>
 </resources>
