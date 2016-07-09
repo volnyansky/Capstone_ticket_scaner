@@ -25,4 +25,9 @@
 	<string name="scan_next">SCAN NEXT</string>
 	<string name="return_to_scan_screen">Return to scan screen</string>
 	<string name="activated_time">Activated time</string>
+	<string name="camera_request_description">This app needs camera access to scan ticket\'s barcodes</string>
+	<string name="grant_access">Grant access</string>
+	<string name="cancel">Cancel</string>
+	<string name="camera_access_not_granted">This app can\'t be used without camera access</string>
+	<string name="close_app">Close app</string>
 </resources>

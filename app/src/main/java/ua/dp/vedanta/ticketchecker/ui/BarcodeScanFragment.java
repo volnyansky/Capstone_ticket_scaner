@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
 import com.google.gson.Gson;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -32,16 +33,21 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Field;
 import ua.dp.vedanta.ticketchecker.R;
 import ua.dp.vedanta.ticketchecker.ThisApplication;
 import ua.dp.vedanta.ticketchecker.api.ApiClient;
 import ua.dp.vedanta.ticketchecker.api.TicketJson;
 
+import ua.dp.vedanta.ticketchecker.api.ValidationResult;
 import ua.dp.vedanta.ticketchecker.databinding.BarcodeScanFragmentBinding;
 import ua.dp.vedanta.ticketchecker.db.Ticket;
 import ua.dp.vedanta.ticketchecker.db.TicketsProvider;
@@ -65,7 +71,7 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mTracker=ThisApplication.getTracker();
+        mTracker = ThisApplication.getTracker();
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.barcode_scan_fragment, container, false);
         rootView = binding.getRoot();
@@ -89,13 +95,14 @@ public class BarcodeScanFragment extends Fragment {
                         .setAction("Scan succesfull")
                         .build());
                 barcodeView.setStatusText(result.getText());
+                barcodeView.pause();
                 ValidateTicket task = new ValidateTicket();
                 task.execute(result.getText());
 
                 //Added preview of scanned barcode
                 ImageView imageView = (ImageView) rootView.findViewById(R.id.barcodePreview);
                 imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
-                barcodeView.pause();
+
             }
         }
 
@@ -164,29 +171,34 @@ public class BarcodeScanFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            long barcode = Long.parseLong(params[0]);
-            Uri uri = ContentUris.withAppendedId(TicketsProvider.CONTENT_URI, barcode);
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
-            Boolean ticketFound = cursor.getCount() > 0;
-            long activationDate = 0;
-            if (ticketFound) {
-                ticket = new Ticket(cursor);
-                cursor.moveToFirst();
-                activationDate = cursor.getInt(cursor.getColumnIndex("activation_date"));
-            }
-            cursor.close();
-
-            if (ticketFound) {
-                if (activationDate == 0) {
-                    ApiClient.getService().validate(params[0], "validated");
-                    ContentValues values = new ContentValues();
-                    values.put("activation_date", System.currentTimeMillis());
-                    getContext().getContentResolver().update(uri, values, null, null);
-                    ticket.setActivated(new Date(values.getAsLong("activation_date")));
+            try {
+                long barcode = Long.parseLong(params[0]);
+                Uri uri = ContentUris.withAppendedId(TicketsProvider.CONTENT_URI, barcode);
+                Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+                Boolean ticketFound = cursor.getCount() > 0;
+                long activationDate = 0;
+                if (ticketFound) {
+                    ticket = new Ticket(cursor);
+                    cursor.moveToFirst();
+                    activationDate = cursor.getInt(cursor.getColumnIndex("activation_date"));
                 }
-                return Boolean.TRUE;
-            } else {
-                try {
+                cursor.close();
+
+                RequestBody param = RequestBody.create(MediaType.parse("text/plain"), params[0]);
+
+                if (ticketFound) {
+                    if (activationDate == 0) {
+
+                        ApiClient.getService().validate(params[0], param).execute();
+
+                        ContentValues values = new ContentValues();
+                        values.put("activation_date", System.currentTimeMillis());
+                        getContext().getContentResolver().update(uri, values, null, null);
+                        ticket.setActivated(new Date(values.getAsLong("activation_date")));
+                    }
+                    return Boolean.TRUE;
+                } else {
+
                     Response<TicketJson> response = ApiClient.getService().getTicket(params[0]).execute();
                     TicketJson ticketJson = response.body();
                     ContentValues values = new ContentValues();
@@ -195,12 +207,14 @@ public class BarcodeScanFragment extends Fragment {
                     values.put("price", ticketJson.getLineItem().getUnitPrice());
                     values.put("user_name", ticketJson.getOrder().getOwner().getName());
                     values.put("email", ticketJson.getOrder().getOwner().getMail());
-                    values.put("event_date",ticketJson.getProduct().getDateStart()*1000);
+                    values.put("event_date", ticketJson.getProduct().getDateStart() * 1000);
                     values.put("phone", ticketJson.getOrder().getOwner().getPhone());
                     getContext().getContentResolver().insert(TicketsProvider.CONTENT_URI, values);
                     ticket = new Ticket(values);
-                    if (ticketJson.getValid()) {
-                        ApiClient.getService().validate(params[0], "validated");
+
+
+                    if (!ticketJson.getUsed()) {
+                        ApiClient.getService().validate(params[0], param).execute();
                         values = new ContentValues();
                         values.put("activation_date", System.currentTimeMillis());
                         getContext().getContentResolver().update(uri, values, null, null);
@@ -212,14 +226,13 @@ public class BarcodeScanFragment extends Fragment {
                     ticket.setActivated(new Date(values.getAsLong("activation_date")));
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    error = e.getLocalizedMessage();
-                    return Boolean.FALSE;
+                    return Boolean.TRUE;
                 }
-                return Boolean.TRUE;
+            } catch (IOException e) {
+                e.printStackTrace();
+                error = e.getLocalizedMessage();
+                return Boolean.FALSE;
             }
-
         }
     }
 
