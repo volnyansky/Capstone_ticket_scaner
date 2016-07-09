@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import ua.dp.vedanta.ticketchecker.BR;
 import ua.dp.vedanta.ticketchecker.R;
+import ua.dp.vedanta.ticketchecker.ThisApplication;
 import ua.dp.vedanta.ticketchecker.api.TicketJson;
 import ua.dp.vedanta.ticketchecker.databinding.TicketDetailsActivityBinding;
 import ua.dp.vedanta.ticketchecker.db.Ticket;
@@ -18,11 +21,13 @@ import ua.dp.vedanta.ticketchecker.db.Ticket;
 public class TicketDetailsActivity extends AppCompatActivity {
     Ticket ticket;
     public  final ObservableField<Boolean> hideScan=new ObservableField<>(false);
+    private Tracker mTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TicketDetailsActivityBinding binding= DataBindingUtil.setContentView(this,R.layout.ticket_details_activity);
-        Gson gson=new Gson();
+
         if (getIntent()!=null && getIntent().hasExtra("ticket")) {
             ticket=getIntent().getParcelableExtra("ticket");
             hideScan.set(getIntent().getBooleanExtra("hide_scan",false));
@@ -43,7 +48,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
+        mTracker= ThisApplication.getTracker();
 
     }
 
@@ -61,5 +66,13 @@ public class TicketDetailsActivity extends AppCompatActivity {
             finish();
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Ticket details");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
     }
 }

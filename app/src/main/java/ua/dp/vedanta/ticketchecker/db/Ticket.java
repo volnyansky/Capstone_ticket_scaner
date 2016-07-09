@@ -37,7 +37,7 @@ public class Ticket implements Parcelable {
 
     public Ticket(Cursor cursor) {
         if (cursor.moveToFirst()) {
-            setBarcode(cursor.getInt(cursor.getColumnIndex("_ID")));
+            setBarcode(cursor.getLong(cursor.getColumnIndex("_ID")));
             setEvent(cursor.getString(cursor.getColumnIndex("event")));
             setPrice(cursor.getFloat(cursor.getColumnIndex("price")));
             Date dt = new Date(cursor.getLong(cursor.getColumnIndex("activation_date")));

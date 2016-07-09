@@ -4,6 +4,7 @@ package ua.dp.vedanta.ticketchecker.ui;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -19,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -35,6 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ua.dp.vedanta.ticketchecker.R;
+import ua.dp.vedanta.ticketchecker.ThisApplication;
 import ua.dp.vedanta.ticketchecker.api.ApiClient;
 import ua.dp.vedanta.ticketchecker.api.TicketJson;
 
@@ -51,6 +55,7 @@ public class BarcodeScanFragment extends Fragment {
 
     private View rootView;
     private BarcodeScanFragmentBinding binding;
+    private Tracker mTracker;
 
     public BarcodeScanFragment() {
         // Required empty public constructor
@@ -60,15 +65,13 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mTracker=ThisApplication.getTracker();
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.barcode_scan_fragment, container, false);
         rootView = binding.getRoot();
         inflater.inflate(R.layout.barcode_scan_fragment, container, false);
         barcodeView = binding.barcodeScanner;
         barcodeView.decodeContinuous(callback);
-
-        ValidateTicket task = new ValidateTicket();
-        task.execute("0597380143");
 
         return rootView;
     }
@@ -81,6 +84,10 @@ public class BarcodeScanFragment extends Fragment {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
+                ThisApplication.getTracker().send(new HitBuilders.EventBuilder()
+                        .setCategory("Event")
+                        .setAction("Scan succesfull")
+                        .build());
                 barcodeView.setStatusText(result.getText());
                 ValidateTicket task = new ValidateTicket();
                 task.execute(result.getText());
@@ -88,6 +95,7 @@ public class BarcodeScanFragment extends Fragment {
                 //Added preview of scanned barcode
                 ImageView imageView = (ImageView) rootView.findViewById(R.id.barcodePreview);
                 imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
+                barcodeView.pause();
             }
         }
 
@@ -100,8 +108,10 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        mTracker.setScreenName("Scan");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         barcodeView.resume();
+        barcodeView.setStatusText("");
     }
 
     @Override
@@ -128,22 +138,33 @@ public class BarcodeScanFragment extends Fragment {
                 intent.putExtra("ticket", ticket);
                 startActivity(intent);
             } else if (error != null) {
+
                 new AlertDialog.Builder(getContext())
                         .setTitle(R.string.error)
                         .setMessage(error)
-                        .setPositiveButton("OK", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                barcodeView.resume();
+                            }
+                        })
                         .show();
             } else {
                 new AlertDialog.Builder(getContext())
                         .setMessage(R.string.ticket_not_found)
-                        .setPositiveButton("OK", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                barcodeView.resume();
+                            }
+                        })
                         .show();
             }
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
-            int barcode = Integer.parseInt(params[0]);
+            long barcode = Long.parseLong(params[0]);
             Uri uri = ContentUris.withAppendedId(TicketsProvider.CONTENT_URI, barcode);
             Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
             Boolean ticketFound = cursor.getCount() > 0;

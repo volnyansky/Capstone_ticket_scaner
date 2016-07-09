@@ -19,4 +19,5 @@
 	<string name="event_date">Дата события</string>
 	<string name="scan_next">ВЕРНУТЬСЯ К СКАНИРОВАНИЮ</string>
 	<string name="return_to_scan_screen">Вернуться к экрану сканирования</string>
+	<string name="activated_time">Время активации</string>
 </resources>

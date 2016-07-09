@@ -15,7 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import ua.dp.vedanta.ticketchecker.R;
+import ua.dp.vedanta.ticketchecker.ThisApplication;
 import ua.dp.vedanta.ticketchecker.db.TicketsProvider;
 
 
@@ -26,6 +30,7 @@ public class HistoryFragment extends Fragment implements  LoaderManager.LoaderCa
     private int mColumnCount = 1;
     HistoryRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
+    private Tracker mTracker;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -37,7 +42,7 @@ public class HistoryFragment extends Fragment implements  LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTracker= ThisApplication.getTracker();
     }
 
     @Override
@@ -76,6 +81,14 @@ public class HistoryFragment extends Fragment implements  LoaderManager.LoaderCa
         super.onDetach();
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Ticket details");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
     // Init loader
 
     @Override

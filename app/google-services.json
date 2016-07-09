@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "820732626235",
-    "firebase_url": "https://travel-app-afc57.firebaseio.com",
-    "project_id": "travel-app-afc57",
-    "storage_bucket": "travel-app-afc57.appspot.com"
+    "project_number": "932002246219",
+    "firebase_url": "https://ticket-checker.firebaseio.com",
+    "project_id": "ticket-checker",
+    "storage_bucket": "ticket-checker.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:820732626235:android:d94a1b6004b3fe27",
+        "mobilesdk_app_id": "1:932002246219:android:d94a1b6004b3fe27",
         "android_client_info": {
           "package_name": "ua.dp.vedanta.ticketchecker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "820732626235-b61chr6p2jo2jqsi6dicd94ub1mog5ht.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ua.dp.vedanta.ticketchecker",
-            "certificate_hash": "0A9456CD92267DF037380A0A3FBFC0C255ADDC9A"
-          }
-        },
-        {
-          "client_id": "820732626235-i98phrl3a4d5abo4m96fnd04cvdmkha3.apps.googleusercontent.com",
+          "client_id": "932002246219-lck150jsfq9serm3klcttr5s1kipkkqd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyALnXQaZpBG1liPGeIeMZUbDitGy2BEzN4"
+          "current_key": "AIzaSyDEXtSMF10sY_qZPK4Uq1YODwNh5soZnzA"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "820732626235-i98phrl3a4d5abo4m96fnd04cvdmkha3.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

@@ -24,4 +24,5 @@
 	<string name="event_date">Event date</string>
 	<string name="scan_next">SCAN NEXT</string>
 	<string name="return_to_scan_screen">Return to scan screen</string>
+	<string name="activated_time">Activated time</string>
 </resources>
