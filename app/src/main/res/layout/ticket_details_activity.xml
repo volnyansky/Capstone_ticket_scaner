@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="ua.dp.vedanta.ticketchecker.ui.TicketDetailsActivity"
+	>
+
+	<data>
+
+		<variable
+			name="ticket"
+			type="ua.dp.vedanta.ticketchecker.db.Ticket"/>
+		<variable
+			name="activity"
+			type="ua.dp.vedanta.ticketchecker.ui.TicketDetailsActivity"/>
+
+		<import type="android.view.View" alias="View"/>
+	</data>
+
+<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	>
+	<android.support.v7.widget.GridLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/activity_vertical_margin"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/activity_horizontal_margin"
+		android:paddingTop="@dimen/activity_vertical_margin"
+		android:layout_centerVertical="true"
+		app:columnCount="2"
+		>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/event"
+			/>
+
+		<TextView
+			android:id="@+id/event"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{ticket.event,default=YOGA_RETRIT}"
+
+
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/event_date"
+			/>
+
+		<TextView
+			android:id="@+id/event_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{ticket.eventDateFormatted,default=10_08_2016}"
+
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/ticket_code"
+			/>
+
+		<TextView
+			android:id="@+id/ticket_code"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:text="@{ticket.barcode,default=1213234}"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/ticket_price"
+			/>
+
+		<TextView
+			android:id="@+id/ticket_price"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{ticket.priceFormatted,default=100.00}"
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/client"
+
+			/>
+
+		<TextView
+			android:id="@+id/client"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text='@{ticket.userName,default="Ivan Grechko"}'
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/email"
+			/>
+
+		<TextView
+			android:id="@+id/email"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text='@{ticket.email,default="ivan.grechko@gmail.com"}'
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/phone"
+			/>
+
+		<TextView
+			android:id="@+id/phone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{ticket.phone,default=`+380673451234`}"
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Activated time"
+			/>
+
+		<TextView
+			android:id="@+id/activated_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{ticket.activatedFormatted,default=`10.10.2016 13:32:12`}"
+			/>
+		<android.support.v7.widget.Space
+			android:layout_width="match_parent"
+		    android:layout_height="10dp"
+		    app:layout_columnSpan="2"
+			/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:text="@string/ticket_activated"
+		    android:textColor="@color/ticketValid"
+		    android:visibility="@{ticket.valid?View.VISIBLE:View.GONE}"
+		    app:layout_columnSpan="2"
+		    app:layout_gravity="center"
+			android:textSize="20sp"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/ticket_alredy_activated"
+			android:textColor="@color/ticketInvalid"
+			android:visibility="@{!ticket.valid?View.VISIBLE:View.GONE}"
+			app:layout_columnSpan="2"
+			app:layout_gravity="center"
+			android:textSize="20sp"/>
+	</android.support.v7.widget.GridLayout>
+	<Button
+		android:id="@+id/scan_next"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:text="@string/scan_next"
+		android:contentDescription="@string/return_to_scan_screen"
+		android:onClick="@{ ()-> activity.finish()}"
+		android:visibility="@{activity.hideScan?View.GONE:View.VISIBLE}"
+		/>
+</RelativeLayout>
+</layout>

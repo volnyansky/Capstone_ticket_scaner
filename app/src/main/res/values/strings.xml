@@ -1,0 +1,27 @@
+<resources>
+	<string name="app_name">Ticket Checker</string>
+
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+
+	<string name="action_settings">Settings</string>
+
+
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="ticket_code">Ticket\'s code</string>
+	<string name="ticket_price">Ticket\'s price</string>
+	<string name="client">Client</string>
+	<string name="email">Email</string>
+	<string name="event">Event</string>
+	<string name="phone">Phone</string>
+	<string name="ticket_activated">TICKET WAS ACTIVATED</string>
+	<string name="ticket_alredy_activated">TICKET WAS ALREADY ACTIVATED</string>
+	<string name="error">Error</string>
+	<string name="ticket_not_found">Ticket was not found</string>
+	<string name="ticket_details">Ticked details</string>
+	<string name="history">History</string>
+	<string name="scan">Scan</string>
+	<string name="event_date">Event date</string>
+	<string name="scan_next">SCAN NEXT</string>
+	<string name="return_to_scan_screen">Return to scan screen</string>
+</resources>

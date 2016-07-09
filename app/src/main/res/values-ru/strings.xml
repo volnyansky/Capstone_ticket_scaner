@@ -1,0 +1,22 @@
+<resources>
+	<string name="app_name">Проверка билетов</string>
+
+	<string name="navigation_drawer_open">Открыть навигацию</string>
+	<string name="navigation_drawer_close">Закрыть навигацию</string>
+	<string name="ticket_code">Код билета</string>
+	<string name="ticket_price">Цена билета</string>
+	<string name="client">Клиент</string>
+	<string name="email">Email</string>
+	<string name="event">Событие</string>
+	<string name="phone">Телефон</string>
+	<string name="ticket_activated">БИЛЕТ БЫЛ АКТИВИРОВАН</string>
+	<string name="ticket_alredy_activated">БИЛЕТ УЖЕ БЫЛ АКТИВИРОВАН</string>
+	<string name="error">Ошибка</string>
+	<string name="ticket_not_found">Билет не найден</string>
+	<string name="ticket_details">Билет</string>
+	<string name="history">История</string>
+	<string name="scan">Сканирование</string>
+	<string name="event_date">Дата события</string>
+	<string name="scan_next">ВЕРНУТЬСЯ К СКАНИРОВАНИЮ</string>
+	<string name="return_to_scan_screen">Вернуться к экрану сканирования</string>
+</resources>
