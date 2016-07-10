@@ -22,7 +22,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:id="@+id/buttonsLayout"
-		android:layout_toLeftOf="@+id/centerHorizont">
+		android:layout_toStartOf="@+id/centerHorizont">
 
 
 			 />
@@ -37,7 +37,7 @@
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/centerHorizont"
+		android:layout_toEndOf="@id/centerHorizont"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignTop="@id/buttonsLayout"
