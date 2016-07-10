@@ -3,6 +3,13 @@ apply plugin: 'com.google.gms.google-services'
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
 def keystorePropertiesFile = rootProject.file("keystore.properties")
+/*
+Keystore properties file should look like this:
+storePassword=*****
+keyPassword=*****
+keyAlias=release
+storeFile= path to store file
+ */
 
 // Initialize a new Properties() object called keystoreProperties.
 def keystoreProperties = new Properties()
